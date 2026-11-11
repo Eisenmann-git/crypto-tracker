@@ -12,6 +12,7 @@ interface Coin {
 function App() {
   const [coins, setCoins] = useState<Coin[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [searchQuery, setSearchQuery] = useState<string>('');
   useEffect(() => {
     const fetchCoins = async () => {
       try {
@@ -36,13 +37,16 @@ function App() {
     fetchCoins();
   }, [])
 
+  const filtredCoins = coins.filter((coin) => coin.name.toLowerCase().includes(searchQuery.toLowerCase()))
+
   return (
     <div className="app-container">
       <h1>Crypto Tracker</h1>
+      <input type="text" placeholder='Поиск монеты...' value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)}/>
       {isLoading && <p>Загрузка курсов...</p>}
       <div className="coins-grid">
         {
-        coins.map((coin) => {
+        filtredCoins.map((coin) => {
           return (
             <div className="coin-card" key={coin.id}>
               <h3>{coin.name}</h3>
